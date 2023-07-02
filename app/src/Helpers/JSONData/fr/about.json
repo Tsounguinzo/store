@@ -1,0 +1,38 @@
+{
+  "contactData": {
+    "image": "../../../public/images/about-img-1.png",
+    "title": "Pourquoi nous?",
+    "description": "Chez KmerPlus - Ferme Bio, nous offrons des produits biologiques d'origine locale qui sont fabriqués avec soin. Savourez des aliments délicieux, frais et nutritifs tout en soutenant les agriculteurs locaux et les pratiques durables. Choisissez KmerPlus pour un choix plus sain, plus savoureux et plus durable.",
+    "link": "comment.php",
+    "link-name": "contact us"
+  },
+
+  "productData": {
+    "image": "../../../public/images/a.jpg",
+    "title": "nos produits",
+    "description": "Chez KmerPlus - Ferme Bio, nous proposons une large gamme de produits frais de la ferme, notamment des cailles, des lapins, des canards, des poulets à griller et du porc. Nos produits proviennent directement de notre propre bio-ferme, assurant fraîcheur et traçabilité.",
+    "link": "shop.php",
+    "link-name": "notre boutique"
+  },
+
+  "reviewsData": [
+    {
+      "image": "../../../public/images/pic-1.png",
+      "content": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et voluptates sit earum, neque non cupiditate amet deserunt aperiam quas ex.",
+      "rating": 4.5,
+      "name": "john deo"
+    },
+    {
+      "image": "../../../public/images/pic-2.png",
+      "content": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et voluptates sit earum, neque non cupiditate amet deserunt aperiam quas ex.",
+      "rating": 2,
+      "name": "john deo"
+    },
+    {
+      "image": "../../../public/images/pic-3.png",
+      "content": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et voluptates sit earum, neque non cupiditate amet deserunt aperiam quas ex.",
+      "rating": 4.5,
+      "name": "john deo"
+    }
+    ]
+}

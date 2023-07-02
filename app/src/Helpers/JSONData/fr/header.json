@@ -1,0 +1,47 @@
+{
+  "navbar": [
+    {
+      "url": "home.php",
+      "text": "Accueil"
+    },
+    {
+      "url": "shop.php",
+      "text": "Boutique"
+    },
+    {
+      "url": "orders.php",
+      "text": "Mes commandes"
+    },
+    {
+      "url": "about.php",
+      "text": "À propos"
+    },
+    {
+      "url": "comment.php",
+      "text": "Commentaire"
+    }
+  ],
+  
+  "profile": {
+    "image-root": "uploaded_img/",
+    "update": {
+      "url": "user_profile_update.php",
+      "text": "Mettre à jour le profil"
+    },
+    "logout": {
+      "url": "logout.php",
+      "text": "Déconnexion"
+    }
+  },
+
+  "login": {
+    "url": "login.php",
+    "text": "Connexion"
+  },
+  
+  "register": {
+    "url": "register.php",
+    "text": "S'inscrire"
+  }
+  
+}

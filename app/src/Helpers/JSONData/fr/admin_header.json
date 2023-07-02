@@ -1,0 +1,65 @@
+{
+  "navbar": {
+    "links": [
+      {
+        "url":"../Admin/admin_page.php",
+        "text": "home"
+      },
+      {
+        "url":"../Admin/admin_products.php",
+        "text": "products"
+      },
+      {
+        "url":"../Admin/admin_orders.php",
+        "text": "orders"
+      },
+      {
+        "url":"../Admin/admin_users.php",
+        "text": "users"
+      },
+      {
+        "url":"../Admin/admin_contacts.php",
+        "text": "messages"
+      }
+    ]
+  },
+
+  "icons": [
+    {
+      "name": "menu-btn",
+      "icon": "fas fa-bars"
+    },
+    {
+      "name": "user-btn",
+      "icon": "fas fa-user"
+    }
+  ],
+
+  "profile": {
+    "img-root": "uploaded_img/",
+    "buttons": [
+      {
+        "url": "../Admin/admin_update_profile.php",
+        "class": "btn",
+        "text": "update profile"
+      },
+      {
+        "url": "../logout.php",
+        "class": "delete-btn",
+        "text": "logout"
+      }
+    ],
+    "flex-buttons": [
+      {
+        "url": "../login.php",
+        "class": "option-btn",
+        "text": "login"
+      },
+      {
+        "url": "../register.php",
+        "class": "option-btn",
+        "text": "register"
+      }
+    ]
+  }
+}

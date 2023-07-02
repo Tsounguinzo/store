@@ -1,0 +1,99 @@
+{
+  "fastLinks": {
+    "title": "Liens rapides",
+    "links": [
+      {
+        "url": "home.php",
+        "icon": "fas fa-angle-right",
+        "text": "Accueil"
+      },
+      {
+        "url": "shop.php",
+        "icon": "fas fa-angle-right",
+        "text": "Boutique"
+      },
+      {
+        "url": "about.php",
+        "icon": "fas fa-angle-right",
+        "text": "À propos"
+      },
+      {
+        "url": "comment.php",
+        "icon": "fas fa-angle-right",
+        "text": "Commentaire"
+      }
+    ]
+  },
+
+  "moreLinks": {
+    "title": "Liens supplémentaires",
+    "links": [
+      {
+        "url": "cart.php",
+        "icon": "fas fa-angle-right",
+        "text": "Panier"
+      },
+      {
+        "url": "waitlist.php",
+        "icon": "fas fa-angle-right",
+        "text": "Liste d'attente"
+      },
+      {
+        "url": "login.php",
+        "icon": "fas fa-angle-right",
+        "text": "Connexion"
+      },
+      {
+        "url": "register.php",
+        "icon": "fas fa-angle-right",
+        "text": "S'inscrire"
+      }
+    ]
+  },
+
+  "contactInfo": {
+    "title": "Contact",
+    "links": [
+      {
+        "icon": "fas fa-phone",
+        "text": "+243 82 82 50 634"
+      },
+      {
+        "icon": "fas fa-phone",
+        "text": "+243 90 75 75 690"
+      },
+      {
+        "icon": "fab fa-whatsapp fa-lg",
+        "text": "+243 82 82 50 634"
+      },
+      {
+        "icon": "fas fa-envelope",
+        "text": "fermeminkondo@gmail.com"
+      },
+      {
+        "icon": "fas fa-map-marker-alt",
+        "text": "Q/Minkondo, C/N’Sele, Kinshasa-RDC"
+      }
+    ]
+  },
+
+  "socialMedias": {
+    "title": "Suivez-nous",
+    "links": [
+      {
+        "url": "#",
+        "icon": "fab fa-facebook-f",
+        "text": "Facebook"
+      },
+      {
+        "url": "#",
+        "icon": "fab fa-instagram",
+        "text": "Instagram"
+      }
+      ]
+  },
+
+  "copyright": {
+    "text": "Tous droits réservés"
+  }
+}
