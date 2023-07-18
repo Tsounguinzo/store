@@ -9,5 +9,6 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'Models\\' => array($baseDir . '/app/src/Models'),
     'Handlers\\' => array($baseDir . '/app/src/Handlers'),
 );

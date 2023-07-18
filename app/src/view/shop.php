@@ -1,6 +1,6 @@
 <?php
 
-@include 'config.php';
+require_once '../../../config/config.php';
 
 session_start();
 
@@ -113,7 +113,7 @@ if(isset($_POST['add_to_cart'])){
 
 <section class="products">
 
-   <h1 class="title">latest products</h1>
+   <h1 class="title">produits</h1>
 
    <div class="box-container">
 
@@ -138,34 +138,26 @@ if(isset($_POST['add_to_cart'])){
        <?php endif; ?>
 
        <input type="text"
-              value="<?= ($fetch_products['quantity'] > 0)? $fetch_products['quantity']." left" : "Out Of Stock" ; ?>"
+              value="<?= ($fetch_products['quantity'] > 0)? $fetch_products['quantity']." restant(s)" : "rupture de stock" ; ?>"
               class="btn" name="qty_left" readonly
        >
 
        <?php if(($fetch_products['quantity'] <= 0)): ?>
-           <input type="submit" value="add to waitlist" class="option-btn" name="add_to_waitlist">
+           <input type="submit" value="être Notifié" class="option-btn" name="add_to_waitlist">
        <?php else: ?>
-           <input type="submit" value="add to cart" name="add_to_cart" class="btn">
+           <input type="submit" value="Ajouter au panier" name="add_to_cart" class="btn">
        <?php endif; ?>
    </form>
    <?php
       }
    }else{
-      echo '<p class="empty">no products added yet!</p>';
+      echo '<p class="empty">Aucun produit</p>';
    }
    ?>
 
    </div>
 
 </section>
-
-
-
-
-
-
-
-
 <?php include 'footer.php'; ?>
 
 <script src="js/script.js"></script>

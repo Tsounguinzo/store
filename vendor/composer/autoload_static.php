@@ -15,6 +15,7 @@ class ComposerStaticInitfc94dbc857362657b8785cb265bec274
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Models\\' => 7,
         ),
         'H' => 
         array (
@@ -34,6 +35,10 @@ class ComposerStaticInitfc94dbc857362657b8785cb265bec274
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Models\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/src/Models',
         ),
         'Handlers\\' => 
         array (

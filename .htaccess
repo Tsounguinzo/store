@@ -1,0 +1,4 @@
+ErrorDocument 403 /store/errors/403.php
+ErrorDocument 404 /store/errors/404.php
+ErrorDocument 500 /store/errors/500.php
+Options -Indexes

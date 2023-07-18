@@ -1,0 +1,31 @@
+{
+  "user_info": {
+    "name": {
+      "prompt": "nom d'utilisateur",
+      "place-holder": "ton nom"
+    },
+    "email": {
+      "prompt": "email",
+      "place-holder": "example@gmail.com"
+    },
+    "pic": {
+      "prompt": "nouvelle photo"
+    },
+    "old-pwd": {
+      "prompt": "ancien mot de passe",
+      "place-holder": "ancien mot de passe"
+    },
+    "new-pwd": {
+      "prompt": "nouveau mot de passe",
+      "place-holder": "nouveau mot de passe"
+    },
+    "cnew-pwd": {
+      "prompt": "Confirmez le mot de passe",
+      "place-holder": "Confirmez le mot de passe"
+    },
+    "title": "mettre à jour le profil",
+   "update-btn":"mettre à jour",
+    "back-btn": "retour"
+  }
+
+}

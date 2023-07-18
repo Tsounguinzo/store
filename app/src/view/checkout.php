@@ -1,6 +1,6 @@
 <?php
 
-@include 'config.php';
+require_once '../../../config/config.php';
 
 session_start();
 
@@ -49,8 +49,25 @@ if(isset($_POST['order'])){
    }else{
       $insert_order = $conn->prepare("INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price, placed_on) VALUES(?,?,?,?,?,?,?,?,?)");
       $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $total_products, $cart_total, $placed_on]);
+       $products = $conn->prepare("SELECT pid, quantity FROM `cart` WHERE user_id = ?");
+       $products->execute([$user_id]);
+       $products = $products->fetchAll(PDO::FETCH_ASSOC);
+
+       foreach ($products as $product){
+           $previous_qty = $conn->prepare("SELECT quantity FROM `products` WHERE id=:id");
+           $previous_qty->execute([':id' => $product['pid']]);
+           $previous_qty = $previous_qty->fetch(PDO::FETCH_ASSOC);
+
+            $update_product_qty = $conn->prepare("UPDATE `products` SET quantity = :qty WHERE id=:id");
+           $update_product_qty->execute([
+                   ':qty'=> $previous_qty['quantity'] - $product['quantity'],
+                   ':id'=>$product['pid']]);
+       }
+
+
       $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE user_id = ?");
       $delete_cart->execute([$user_id]);
+
       $message[] = 'order placed successfully!';
    }
 
@@ -75,7 +92,7 @@ if(isset($_POST['order'])){
 </head>
 <body>
    
-<?php include 'header.php'; ?>
+<?php require_once 'header.php'; ?>
 
 <section class="display-orders">
 
@@ -83,17 +100,23 @@ if(isset($_POST['order'])){
       $cart_grand_total = 0;
       $select_cart_items = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
       $select_cart_items->execute([$user_id]);
-      if($select_cart_items->rowCount() > 0){
-         while($fetch_cart_items = $select_cart_items->fetch(PDO::FETCH_ASSOC)){
-            $cart_total_price = ($fetch_cart_items['price'] * $fetch_cart_items['quantity']);
+      $fetch_cart_items = $select_cart_items->fetchAll(PDO::FETCH_ASSOC);
+
+      $user = $conn->prepare("SELECT * FROM `users` WHERE id=?");
+      $user->execute([$user_id]);
+      $user = $user->fetch(PDO::FETCH_ASSOC);
+
+      if(empty($fetch_cart_items)) {
+          echo '<p class="empty">your cart is empty!</p>';
+      } else {
+          foreach ($fetch_cart_items as $fetch_cart_item) {
+            $cart_total_price = ($fetch_cart_item['price'] * $fetch_cart_item['quantity']);
             $cart_grand_total += $cart_total_price;
    ?>
-   <p> <?= $fetch_cart_items['name']; ?> <span>(<?= '$'.$fetch_cart_items['price'].' x '. $fetch_cart_items['quantity']; ?>)</span> </p>
+   <p> <?= $fetch_cart_item['name']; ?> <span>(<?= '$'.$fetch_cart_item['price'].' x '. $fetch_cart_item['quantity']; ?>)</span> </p>
    <?php
     }
-   }else{
-      echo '<p class="empty">your cart is empty!</p>';
-   }
+      }
    ?>
    <div class="grand-total">grand total : <span>$<?= $cart_grand_total; ?></span></div>
 </section>
@@ -106,24 +129,23 @@ if(isset($_POST['order'])){
 
       <div class="flex">
          <div class="inputBox">
-            <span>your name :</span>
-            <input type="text" name="name" placeholder="enter your name" class="box" required>
+            <span>name :</span>
+            <input type="text" value="<?=$user['name']?>" name="name" class="box" required>
          </div>
          <div class="inputBox">
-            <span>your number :</span>
-            <input type="number" name="number" placeholder="enter your number" class="box" required>
+            <span>number :</span>
+            <input type="tel" value="<?=$user['number']?>" name="number"  class="box" required>
          </div>
          <div class="inputBox">
-            <span>your email :</span>
-            <input type="email" name="email" placeholder="enter your email" class="box" required>
+            <span>email :</span>
+            <input type="email" name="email" value="<?=$user['email']?>" class="box" required>
          </div>
          <div class="inputBox">
-            <span>payment method :</span>
+            <span>mode de paiement :</span>
             <select name="method" class="box" required>
-               <option value="cash on delivery">cash on delivery</option>
-               <option value="credit card">credit card</option>
-               <option value="paytm">paytm</option>
-               <option value="paypal">paypal</option>
+               <option value="cash on delivery" selected>espèce</option>
+               <option value="mobile money">M-PESA</option>
+               <option value="paypal">Orange Money</option>
             </select>
          </div>
          <div class="inputBox">
@@ -136,15 +158,15 @@ if(isset($_POST['order'])){
          </div>
          <div class="inputBox">
             <span>city :</span>
-            <input type="text" name="city" placeholder="e.g. mumbai" class="box" required>
+            <input type="text" name="city" placeholder="e.g. braza" class="box" required>
          </div>
          <div class="inputBox">
             <span>state :</span>
-            <input type="text" name="state" placeholder="e.g. maharashtra" class="box" required>
+            <input type="text" name="state" placeholder="e.g. kin" class="box" required>
          </div>
          <div class="inputBox">
             <span>country :</span>
-            <input type="text" name="country" placeholder="e.g. India" class="box" required>
+            <input type="text" name="country" placeholder="e.g. RDC" class="box" required>
          </div>
          <div class="inputBox">
             <span>pin code :</span>
@@ -158,14 +180,7 @@ if(isset($_POST['order'])){
 
 </section>
 
-
-
-
-
-
-
-
-<?php include 'footer.php'; ?>
+<?php require_once 'footer.php'; ?>
 
 <script src="js/script.js"></script>
 

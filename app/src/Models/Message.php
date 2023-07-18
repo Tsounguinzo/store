@@ -40,7 +40,7 @@ class Message
         }
 
         try {
-            $messageExists = $this->isMessageExists($name, $email, $number, $message);
+            $messageExists = $this->doesMessageExists($name, $email, $number, $message);
             if ($messageExists) {
                 $this->logger->warning('Message already sent!');
                 return 'Message already sent!';
@@ -60,7 +60,7 @@ class Message
         }
     }
 
-    private function isMessageExists($name, $email, $number, $message)
+    private function doesMessageExists($name, $email, $number, $message)
     {
         $query = "SELECT COUNT(*) FROM `message` WHERE name = :name AND email = :email AND number = :number AND message = :message";
         $stmt = $this->conn->prepare($query);
@@ -94,4 +94,5 @@ class Message
     {
         return htmlspecialchars($input);
     }
+
 }

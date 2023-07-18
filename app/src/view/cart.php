@@ -1,6 +1,6 @@
 <?php
 
-@include 'config.php';
+require_once '../../../config/config.php';
 
 session_start();
 
@@ -61,7 +61,7 @@ if(isset($_POST['update_qty'])){
 
    <?php
       $grand_total = 0;
-      $select_cart = $conn->prepare("SELECT cart.* , products.quantity AS qty FROM `cart` INNER JOIN `products` ON cart.pid = products.id WHERE user_id = ?");
+      $select_cart = $conn->prepare("SELECT cart.* , products.quantity AS qty FROM `cart` INNER JOIN `products` ON cart.pid = products.id WHERE user_id = ? AND products.quantity > 0");
       $select_cart->execute([$user_id]);
       if($select_cart->rowCount() > 0){
          while($fetch_cart = $select_cart->fetch(PDO::FETCH_ASSOC)){ 
@@ -104,13 +104,6 @@ if(isset($_POST['update_qty'])){
    </div>
 
 </section>
-
-
-
-
-
-
-
 
 <?php include 'footer.php'; ?>
 

@@ -1,0 +1,13 @@
+
+{
+  "waitlist-info": {
+    "title": "produits ajoutés",
+    "empty-text": "Votre liste d'attente est vide",
+    "left-txt": "restant(s)",
+    "finished-txt": "rupture de stock",
+    "add-to-cart": "Ajouter au panier",
+    "total-cost": "total",
+    "continue-btn": "continuer les achats",
+    "delete-all-btn": "supprimer tout"
+  }
+}

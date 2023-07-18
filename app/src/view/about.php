@@ -32,7 +32,7 @@ populatePage($dataFilePath, $contactData, $productData, $reviewsData);
 </head>
 <body>
    
-<?php require_once 'Partials/header.php'; ?>
+<?php require_once 'header.php'; ?>
 
 <section class="about">
 
@@ -75,7 +75,7 @@ populatePage($dataFilePath, $contactData, $productData, $reviewsData);
                    } elseif ($i - $rating === 0.5) {
                        echo '<i class="fas fa-star-half-alt"></i>';
                    } else {
-                       echo '<i class="far fa-star"></i>';
+                       echo '<i class="fas fa-star"></i>';
                    }
                }
                ?>
@@ -85,7 +85,7 @@ populatePage($dataFilePath, $contactData, $productData, $reviewsData);
        <?php endforeach; ?>
 </section>
 
-<?php require_once 'Partials/footer.php'; ?>
+<?php require_once 'footer.php'; ?>
 
 <script src="js/script.js"></script>
 

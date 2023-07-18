@@ -1,6 +1,6 @@
 <?php
 
-@include 'config.php';
+require_once '../../../config/config.php';
 
 session_start();
 
@@ -105,9 +105,11 @@ if(isset($_POST['add_to_cart'])){
 
     <?php if (isset($_GET['category'])):?>
         <h1 class="title"><?= "Coup de ".$_GET['category'] ?></h1>
+    <?php if ($_GET['category'] == 'porc'):?>
         <div class="parts">
             <img src="images/<?= $_GET['category'].".png"; ?>" alt="<?= $_GET['category']; ?>">
         </div>
+        <?php endif; ?>
     <?php endif; ?>
    <div class="box-container">
 
@@ -133,21 +135,21 @@ if(isset($_POST['add_to_cart'])){
        <?php endif; ?>
 
        <input type="text"
-              value="<?= ($fetch_products['quantity'] > 0)? $fetch_products['quantity']." left" : "Out Of Stock" ; ?>"
+              value="<?= ($fetch_products['quantity'] > 0)? $fetch_products['quantity']." restant(s)" : "rupture de stock" ; ?>"
               class="btn" name="qty_left" readonly
        >
 
        <?php if(($fetch_products['quantity'] <= 0)): ?>
-           <input type="submit" value="add to waitlist" class="option-btn" name="add_to_waitlist">
+           <input type="submit" value="être Notifié" class="option-btn" name="add_to_waitlist">
        <?php else: ?>
-           <input type="submit" value="add to cart" name="add_to_cart" class="btn">
+           <input type="submit" value="Ajouter au panier" name="add_to_cart" class="btn">
        <?php endif; ?>
 
    </form>
    <?php
          }
       }else{
-         echo '<p class="empty">no products available!</p>';
+         echo '<p class="empty">Aucun produit</p>';
       }
    ?>
 

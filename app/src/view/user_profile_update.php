@@ -1,68 +1,29 @@
 <?php
+require_once '../../../vendor/autoload.php';
 
-@include 'config.php';
+use Models\User;
+
+require_once '../../../config/config.php';
+require_once '../../../scripts/populate_php_file.php';
+
+$dataFilePath = '../Helpers/JSONData/fr/user_profile.json';
+$user_info = 'user_info';
+populatePage($dataFilePath, $user_info);
 
 session_start();
 
 $user_id = $_SESSION['user_id'];
 
 if(!isset($user_id)){
-   header('location:login.php');
+    header('location:login.php');
 };
 
-if(isset($_POST['update_profile'])){
+if(isset($_POST['update_profile'])) {
 
-   $name = $_POST['name'];
-   $name = htmlspecialchars($name);
-   $email = $_POST['email'];
-   $email = htmlspecialchars($email);
-
-   $update_profile = $conn->prepare("UPDATE `users` SET name = ?, email = ? WHERE id = ?");
-   $update_profile->execute([$name, $email, $user_id]);
-
-   $image = $_FILES['image']['name'];
-   $image = htmlspecialchars($image);
-   $image_size = $_FILES['image']['size'];
-   $image_tmp_name = $_FILES['image']['tmp_name'];
-   $image_folder = 'uploaded_img/'.$image;
-   $old_image = $_POST['old_image'];
-
-   if(!empty($image)){
-      if($image_size > 2000000){
-         $message[] = 'image size is too large!';
-      }else{
-         $update_image = $conn->prepare("UPDATE `users` SET image = ? WHERE id = ?");
-         $update_image->execute([$image, $user_id]);
-         if($update_image){
-            move_uploaded_file($image_tmp_name, $image_folder);
-            unlink('uploaded_img/'.$old_image);
-            $message[] = 'image updated successfully!';
-         };
-      };
-   };
-
-   $old_pass = $_POST['old_pass'];
-   $update_pass = md5($_POST['update_pass']);
-   $update_pass = htmlspecialchars($update_pass);
-   $new_pass = md5($_POST['new_pass']);
-   $new_pass = htmlspecialchars($new_pass);
-   $confirm_pass = md5($_POST['confirm_pass']);
-   $confirm_pass = htmlspecialchars($confirm_pass);
-
-   if(!empty($update_pass) AND !empty($new_pass) AND !empty($confirm_pass)){
-      if($update_pass != $old_pass){
-         $message[] = 'old password not matched!';
-      }elseif($new_pass != $confirm_pass){
-         $message[] = 'confirm password not matched!';
-      }else{
-         $update_pass_query = $conn->prepare("UPDATE `users` SET password = ? WHERE id = ?");
-         $update_pass_query->execute([$confirm_pass, $user_id]);
-         $message[] = 'password updated successfully!';
-      }
-   }
+    $user = new User($conn);
+    $message[] = $user->updateProfile();
 
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -81,55 +42,38 @@ if(isset($_POST['update_profile'])){
 
 </head>
 <body>
-   
-<?php include 'header.php'; ?>
-
+<?php require_once 'header.php'; ?>
 <section class="update-profile">
 
-   <h1 class="title">update profile</h1>
+   <h1 class="title"><?=$user_info['title']?></h1>
 
-   <form action="" method="POST" enctype="multipart/form-data">
-      <img src="uploaded_img/<?= $fetch_profile['image']; ?>" alt="">
+   <form action="" method="POST">
       <div class="flex">
          <div class="inputBox">
-            <span>username :</span>
-            <input type="text" name="name" value="<?= $fetch_profile['name']; ?>" placeholder="update username" required class="box">
-            <span>email :</span>
-            <input type="email" name="email" value="<?= $fetch_profile['email']; ?>" placeholder="update email" required class="box">
-            <span>update pic :</span>
-            <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="box">
-            <input type="hidden" name="old_image" value="<?= $fetch_profile['image']; ?>">
+            <span><?=$user_info['name']['prompt']?> :</span>
+            <input type="text" name="name" value="<?= $fetch_profile['name']; ?>" placeholder="<?=$user_info['name']['place-holder']?>" required class="box">
+            <span><?=$user_info['email']['prompt']?> :</span>
+            <input type="email" name="email" value="<?= $fetch_profile['email']; ?>" placeholder="<?=$user_info['email']['prompt']?>" required class="box">
          </div>
          <div class="inputBox">
-            <input type="hidden" name="old_pass" value="<?= $fetch_profile['password']; ?>">
-            <span>old password :</span>
-            <input type="password" name="update_pass" placeholder="enter previous password" class="box">
-            <span>new password :</span>
-            <input type="password" name="new_pass" placeholder="enter new password" class="box">
-            <span>confirm password :</span>
-            <input type="password" name="confirm_pass" placeholder="confirm new password" class="box">
+            <input type="hidden" name="old_pass">
+            <span><?=$user_info['old-pwd']['prompt']?> :</span>
+            <input type="password" name="update_pass" placeholder="<?=$user_info['old-pwd']['place-holder']?>" class="box">
+            <span><?=$user_info['new-pwd']['prompt']?> :</span>
+            <input type="password" name="new_pass" placeholder="<?=$user_info['new-pwd']['place-holder']?>" class="box">
+            <span><?=$user_info['cnew-pwd']['prompt']?> :</span>
+            <input type="password" name="confirm_pass" placeholder="<?=$user_info['cnew-pwd']['place-holder']?>" class="box">
          </div>
       </div>
       <div class="flex-btn">
-         <input type="submit" class="btn" value="update profile" name="update_profile">
-         <a href="javascript:history.back()" class="option-btn">go back</a>
+         <input type="submit" class="btn" value="<?=$user_info['update-btn']?>" name="update_profile">
+         <a href="javascript:history.back()" class="option-btn"><?=$user_info['back-btn']?></a>
       </div>
    </form>
 
 </section>
 
-
-
-
-
-
-
-
-
-
-<?php include 'footer.php'; ?>
-
-
+<?php require_once 'footer.php'; ?>
 <script src="js/script.js"></script>
 
 </body>

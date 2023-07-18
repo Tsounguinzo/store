@@ -1,26 +1,13 @@
 <?php
-$jsonDataPath = '../Helpers/JSONData/fr/';
+require_once '../../../../scripts/populate_php_file.php';
 
-$dataFilePath = $jsonDataPath . 'footer.json';
-if(file_exists($dataFilePath)){
-    $jsonData = file_get_contents($dataFilePath);
-    if($jsonData !== false){
-        $data = json_decode($jsonData, true);
-        if($data !== null){
-            $fastLinks = $data['fastLinks'];
-            $moreLinks = $data['moreLinks'];
-            $contactInfo = $data['contactInfo'];
-            $socialMedias = $data['socialMedias'];
-            $copyright = $data['copyright'];
-        } else {
-            echo "Error: Unable to decode the JSON file.";
-        }
-    } else {
-        echo "Error: Unable to read the JSON file.";
-    }
-} else {
-    echo "Error: JSON file not found.";
-}
+$dataFilePath = '../../Helpers/JSONData/fr/footer.json';
+$fastLinks = 'fastLinks';
+$moreLinks = 'moreLinks';
+$contactInfo = 'contactInfo';
+$socialMedias = 'socialMedias';
+$copyright = 'copyright';
+populatePage($dataFilePath, $fastLinks, $moreLinks, $contactInfo, $socialMedias, $copyright);
 ?>
 
 <footer class="footer">

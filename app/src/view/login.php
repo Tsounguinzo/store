@@ -1,45 +1,35 @@
 <?php
 
-@include 'config.php';
+use Models\User;
 
 session_start();
+require_once  '../../../vendor/autoload.php';
+require_once '../../../config/config.php';
+require_once '../Models/User.php';
 
-if(isset($_POST['submit'])){
+$user = new User($conn);
 
-   $email = $_POST['email'];
-   $email = htmlspecialchars($email);
-   $pass = md5($_POST['pass']);
-   $pass = htmlspecialchars($pass);
+if (isset($_POST['submit'])) {
 
-   $sql = "SELECT * FROM `users` WHERE email = ? AND password = ?";
-   $stmt = $conn->prepare($sql);
-   $stmt->execute([$email, $pass]);
-   $rowCount = $stmt->rowCount();  
+    $emailOrName = htmlspecialchars($_POST['email']);
+    $password = htmlspecialchars($_POST['pass']);
 
-   $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $user->authenticate($emailOrName, $password);
 
-   if($rowCount > 0){
-
-      if($row['user_type'] == 'admin'){
-
-         $_SESSION['admin_id'] = $row['id'];
-         header('location:admin_page.php');
-
-      }elseif($row['user_type'] == 'user'){
-
-         $_SESSION['user_id'] = $row['id'];
-         header('location:home.php');
-
-      }else{
-         $message[] = 'no user found!';
-      }
-
-   }else{
-      $message[] = 'incorrect email or password!';
-   }
-
+    if ($result) {
+        if ($result['user_type'] == 'admin') {
+            $_SESSION['admin_id'] = $result['id'];
+            header('location:admin_page.php');
+            exit;
+        } elseif ($result['user_type'] == 'user') {
+            $_SESSION['user_id'] = $result['id'];
+            header('location:home.php');
+            exit;
+        }
+    } else {
+        $message[] = 'Incorrect email or password!';
+    }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -63,12 +53,12 @@ if(isset($_POST['submit'])){
 
 if(isset($message)){
    foreach($message as $message){
-      echo '
-      <div class="message">
+      echo "
+      <div class='message'>
          <span>'.$message.'</span>
-         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+         <i class='fas fa-times' onclick='this.parentElement.remove();'></i>
       </div>
-      ';
+      ";
    }
 }
 
@@ -77,11 +67,11 @@ if(isset($message)){
 <section class="form-container">
 
    <form action="" method="POST">
-      <h3>login now</h3>
-      <input type="email" name="email" class="box" placeholder="enter your email" required>
-      <input type="password" name="pass" class="box" placeholder="enter your password" required>
-      <input type="submit" value="login now" class="btn" name="submit">
-      <p>don't have an account? <a href="register.php">register now</a></p>
+      <h3>CONNEXION</h3>
+      <input type="email" name="email" class="box" placeholder="e-mail ou nom d'utilisateur" required">
+      <input type="password" name="pass" class="box" placeholder="mot de passe" required>
+      <input type="submit" value="se connecter" class="btn" name="submit">
+      <p>vous n'avez pas de compte ? <a href="register.php">inscrivez-vous</a></p>
    </form>
 
 </section>

@@ -1,67 +1,39 @@
 <?php
 
-@include 'config.php';
+require_once '../../../vendor/autoload.php';
+
+use Models\Cart;
+use Models\Waitlist;
+
+require_once '../../../config/config.php';
+require_once '../../../scripts/populate_php_file.php';
+
+$dataFilePath = '../Helpers/JSONData/fr/waitlist.json';
+$waitlist_info = 'waitlist-info';
+populatePage($dataFilePath, $waitlist_info);
 
 session_start();
 
 if(!isset($_SESSION['user_id'])){
-   header('location:login.php');
+    header('location:login.php');
 }
 
 $user_id = $_SESSION['user_id'];
 
-if(isset($_POST['add_to_cart'])){
+$cart = new Cart($conn, $user_id);
+$waitlist = new Waitlist($conn, $user_id);
 
-   $pid = $_POST['pid'];
-   $pid = htmlspecialchars($pid);
-   $p_name = $_POST['p_name'];
-   $p_name = htmlspecialchars($p_name);
-   $p_price = $_POST['p_price'];
-   $p_price = htmlspecialchars($p_price);
-   $p_image = $_POST['p_image'];
-   $p_image = htmlspecialchars($p_image);
-   $p_qty = $_POST['p_qty'];
-   $p_qty = htmlspecialchars($p_qty);
-
-   $check_cart_numbers = $conn->prepare("SELECT * FROM `cart` WHERE name = ? AND user_id = ?");
-   $check_cart_numbers->execute([$p_name, $user_id]);
-
-   if($check_cart_numbers->rowCount() > 0){
-      $message[] = 'already added to cart!';
-   }else{
-
-      $check_waitlist_numbers = $conn->prepare("SELECT * FROM `waitlist` WHERE name = ? AND user_id = ?");
-      $check_waitlist_numbers->execute([$p_name, $user_id]);
-
-      if($check_waitlist_numbers->rowCount() > 0){
-         $delete_waitlist = $conn->prepare("DELETE FROM `waitlist` WHERE name = ? AND user_id = ?");
-         $delete_waitlist->execute([$p_name, $user_id]);
-      }
-
-      $insert_cart = $conn->prepare("INSERT INTO `cart`(user_id, pid, name, price, quantity, image) VALUES(?,?,?,?,?,?)");
-      $insert_cart->execute([$user_id, $pid, $p_name, $p_price, $p_qty, $p_image]);
-      $message[] = 'added to cart!';
-   }
-
+if (isset($_POST['add_to_cart'])) {
+    $cart->addToCart($_POST);
 }
 
-if(isset($_GET['delete'])){
-
-   $delete_id = $_GET['delete'];
-   $delete_waitlist_item = $conn->prepare("DELETE FROM `waitlist` WHERE id = ?");
-   $delete_waitlist_item->execute([$delete_id]);
-   header('location:waitlist.php');
-
+if (isset($_GET['delete'])) {
+    $waitlist->deleteWaitlistItem($_GET['delete']);
 }
 
-if(isset($_GET['delete_all'])){
-
-   $delete_waitlist_item = $conn->prepare("DELETE FROM `waitlist` WHERE user_id = ?");
-   $delete_waitlist_item->execute([$user_id]);
-   header('location:waitlist.php');
-
+if (isset($_GET['delete_all'])) {
+    $waitlist->deleteAllWaitlistItems();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -81,69 +53,67 @@ if(isset($_GET['delete_all'])){
 </head>
 <body>
    
-<?php include 'header.php'; ?>
+<?php require_once 'header.php'; ?>
 
 <section class="waitlist">
+    <h1 class="title"><?=$waitlist_info['title']?></h1>
+    <div class="box-container">
+        <?php
+        $grand_total = 0;
+        $select_waitlist = $conn->prepare("SELECT waitlist.*, products.quantity AS quantity FROM `waitlist` INNER JOIN `products` ON waitlist.pid = products.id WHERE user_id = ?");
+        $select_waitlist->execute([$user_id]);
+        $waitlist_items = $select_waitlist->fetchAll(PDO::FETCH_ASSOC);
 
-   <h1 class="title">products added</h1>
+        foreach ($waitlist_items as $waitlist_item) {
+            $sub_total = ($waitlist_item['quantity'] > 0) ? ($waitlist_item['price'] * $waitlist_item['quantity']) : 0;
+            $grand_total += $sub_total;
+        }
 
-   <div class="box-container">
+        if (empty($waitlist_items)) {
+            $empty = $waitlist_info['empty-text'];
+           echo "<p class='empty'>$empty</p>";
+        } else {
+            foreach ($waitlist_items as $waitlist_item) {
+                $sub_total = ($waitlist_item['quantity'] > 0) ? ($waitlist_item['price'] * $waitlist_item['quantity']) : 0;
+                ?>
+                <form action="" method="POST" class="box">
+                    <a href="waitlist.php?delete=<?= $waitlist_item['id']; ?>" class="fas fa-times" onclick="return confirm('delete this from waitlist?');"></a>
+                    <a href="view_page.php?pid=<?= $waitlist_item['pid']; ?>" class="fas fa-eye"></a>
+                    <img src="uploaded_img/<?= $waitlist_item['image']; ?>" alt="">
+                    <div class="name"><?= $waitlist_item['name']; ?></div>
+                    <div class="price">$<?= $waitlist_item['price']; ?></div>
 
-   <?php
-      $grand_total = 0;
-      $select_waitlist = $conn->prepare("SELECT * FROM `waitlist` INNER JOIN `products` ON waitlist.pid = products.id WHERE user_id = ?");
-      $select_waitlist->execute([$user_id]);
-      if($select_waitlist->rowCount() > 0){
-         while($fetch_waitlist = $select_waitlist->fetch(PDO::FETCH_ASSOC)){ 
-   ?>
-   <form action="" method="POST" class="box">
-      <a href="waitlist.php?delete=<?= $fetch_waitlist['id']; ?>" class="fas fa-times" onclick="return confirm('delete this from waitlist?');"></a>
-      <a href="view_page.php?pid=<?= $fetch_waitlist['pid']; ?>" class="fas fa-eye"></a>
-      <img src="uploaded_img/<?= $fetch_waitlist['image']; ?>" alt="">
-      <div class="name"><?= $fetch_waitlist['name']; ?></div>
-      <div class="price">$<?= $fetch_waitlist['price']; ?></div>
+                    <?php if(($waitlist_item['quantity'] > 0)): ?>
+                        <input type="number" min="1" max="<?= $waitlist_item['quantity']; ?>" value="1" name="p_qty" class="qty">
+                    <?php endif; ?>
+                    <input type="hidden" name="pid" value="<?= $waitlist_item['pid']; ?>">
+                    <input type="hidden" name="p_name" value="<?= $waitlist_item['name']; ?>">
+                    <input type="hidden" name="p_price" value="<?= $waitlist_item['price']; ?>">
+                    <input type="hidden" name="p_image" value="<?= $waitlist_item['image']; ?>">
 
-       <?php if(($fetch_waitlist['quantity'] > 0)): ?>
-           <input type="number" min="1" max="<?= $fetch_waitlist['quantity']; ?>" value="1" name="p_qty" class="qty">
-       <?php endif; ?>
-      <input type="hidden" name="pid" value="<?= $fetch_waitlist['pid']; ?>">
-      <input type="hidden" name="p_name" value="<?= $fetch_waitlist['name']; ?>">
-      <input type="hidden" name="p_price" value="<?= $fetch_waitlist['price']; ?>">
-      <input type="hidden" name="p_image" value="<?= $fetch_waitlist['image']; ?>">
+                    <input type="text"
+                           value="<?= ($waitlist_item['quantity'] > 0)? $waitlist_item['quantity']. " " . $waitlist_info['left-txt'] : $waitlist_info['finished-txt'] ; ?>"
+                           class="btn" name="qty_left" readonly
+                    >
+                    <?php if(($waitlist_item['quantity'] > 0)): ?>
+                        <input type="submit" value="<?=$waitlist_info['add-to-cart']?>" name="add_to_cart" class="btn">
+                    <?php endif; ?>
+                </form>
+                <?php
+            }
+        }
+        ?>
+    </div>
 
-       <input type="text"
-              value="<?= ($fetch_waitlist['quantity'] > 0)? $fetch_waitlist['quantity']." left" : "Out Of Stock" ; ?>"
-              class="btn" name="qty_left" readonly
-       >
-       <?php if(($fetch_waitlist['quantity'] > 0)): ?>
-       <input type="submit" value="add to cart" name="add_to_cart" class="btn">
-       <?php endif; ?>
-   </form>
-   <?php
-      $grand_total += $fetch_waitlist['price'];
-      }
-   }else{
-      echo '<p class="empty">your waitlist is empty</p>';
-   }
-   ?>
-   </div>
-
-   <div class="waitlist-total">
-      <p>grand total : <span>$<?= $grand_total; ?>/-</span></p>
-      <a href="shop.php" class="option-btn">continue shopping</a>
-      <a href="waitlist.php?delete_all" class="delete-btn <?= ($grand_total > 1)?'':'disabled'; ?>">delete all</a>
-   </div>
+    <div class="waitlist-total">
+        <p><?=$waitlist_info['total-cost']?> : <span>$<?= $grand_total; ?></span></p>
+        <a href="shop.php" class="option-btn"><?=$waitlist_info['continue-btn']?></a>
+        <a href="waitlist.php?delete_all" class="delete-btn <?= ($grand_total > 1)?'':'disabled'; ?>"><?=$waitlist_info['delete-all-btn']?></a>
+    </div>
 
 </section>
 
-
-
-
-
-
-
-
-<?php include 'footer.php'; ?>
+<?php require_once 'footer.php'; ?>
 
 <script src="js/script.js"></script>
 

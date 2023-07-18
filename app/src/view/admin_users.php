@@ -1,6 +1,6 @@
 <?php
 
-@include 'config.php';
+require_once '../../../config/config.php';
 
 session_start();
 
@@ -52,7 +52,6 @@ if(isset($_GET['delete'])){
          while($fetch_users = $select_users->fetch(PDO::FETCH_ASSOC)){
       ?>
       <div class="box" style="<?php if($fetch_users['id'] == $admin_id){ echo 'display:none'; }; ?>">
-         <img src="uploaded_img/<?= $fetch_users['image']; ?>" alt="">
          <p> username : <span><?= $fetch_users['name']; ?></span></p>
          <p> email : <span><?= $fetch_users['email']; ?></span></p>
          <p> user type : <span style=" color:<?php if($fetch_users['user_type'] == 'admin'){ echo 'orange'; }; ?>"><?= $fetch_users['user_type']; ?></span></p>

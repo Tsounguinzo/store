@@ -47,7 +47,6 @@ populatePage($dataFilePath, $heroData, $categoriesTitle, $categories,$products);
         <div class="content">
             <span><?=$heroData['intro']?></span>
             <h3><?=$heroData['titre']?></h3>
-            <p><?=$heroData['description']?></p>
             <a href="<?=$heroData['action']['lien']?>" class="btn"><?=$heroData['action']['text']?></a>
         </div>
     </section>
@@ -118,7 +117,7 @@ populatePage($dataFilePath, $heroData, $categoriesTitle, $categories,$products);
     </div>
 </section>
 
-<?php require_once 'Partials/footer.php'; ?>
+<?php require_once 'footer.php'; ?>
 
 <script src="js/script.js"></script>
 

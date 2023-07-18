@@ -63,16 +63,15 @@ populatePage($dataFilePath, $navbar, $profile, $login, $register);
             <?php
             if (isset($user_id)){
 
-                $select_profile = $conn->prepare("SELECT image, name FROM `users` WHERE id = :id");
+                $select_profile = $conn->prepare("SELECT name, email FROM `users` WHERE id = :id");
                 $select_profile->execute([':id' => $user_id]);
                 $fetch_profile = $select_profile->fetch(PDO::FETCH_ASSOC);
 
                 if ($fetch_profile) {
-                    $image = htmlspecialchars($fetch_profile['image']);
                     $name = htmlspecialchars($fetch_profile['name']);
                     ?>
 
-                    <img src="<?=$profile['image-root'] . $image; ?>" alt="">
+
                     <p><?= $name; ?></p>
                     <a href="<?=$profile['update']['url']?>" class="btn"><?=$profile['update']['text']?></a>
                     <a href="<?=$profile['logout']['url']?>" class="delete-btn"><?=$profile['logout']['text']?></a>

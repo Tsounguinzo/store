@@ -9,6 +9,15 @@ if (isset($message)) {
       ';
     }
 }
+
+require_once '../../../../scripts/populate_php_file.php';
+
+$dataFilePath = '../../Helpers/JSONData/fr/header.json';
+$navbar = 'navbar';
+$profile = 'profile';
+$login = 'login';
+$register = 'register';
+populatePage($dataFilePath, $navbar, $profile, $login, $register);
 ?>
 
 <header class="header">
@@ -16,11 +25,9 @@ if (isset($message)) {
         <a href="home.php" class="logo">Ferme Bio <span>KmerPlus</span></a>
 
         <nav class="navbar">
-            <a href="home.php">Accueil</a>
-            <a href="shop.php">Boutique</a>
-            <a href="orders.php">Mes commandes</a>
-            <a href="about.php">À propos</a>
-            <a href="comment.php">Commentaire</a>
+            <?php foreach ($navbar as $link):?>
+                <a href="<?=$link['url']?>"> <?=$link['text']?></a>
+            <?php endforeach;?>
         </nav>
 
         <div class="icons">
@@ -65,20 +72,22 @@ if (isset($message)) {
                     $name = htmlspecialchars($fetch_profile['name']);
                     ?>
 
-                    <img src="uploaded_img/<?= $image; ?>" alt="">
+                    <img src="<?=$profile['image-root'] . $image; ?>" alt="">
                     <p><?= $name; ?></p>
-                    <a href="user_profile_update.php" class="btn">Mettre à jour le profil</a>
-                    <a href="logout.php" class="delete-btn">Déconnexion</a>
+                    <a href="<?=$profile['update']['url']?>" class="btn"><?=$profile['update']['text']?></a>
+                    <a href="<?=$profile['logout']['url']?>" class="delete-btn"><?=$profile['logout']['text']?></a>
 
                     <?php
                 }
-            }
-            ?>
+            } else {
+                ?>
 
-            <div class="flex-btn">
-                <a href="login.php" class="option-btn">Connexion</a>
-                <a href="register.php" class="option-btn">S'inscrire</a>
-            </div>
+                <div class="flex-btn">
+                    <a href="<?=$login['url']?>" class="option-btn"><?=$login['text']?></a>
+                    <a href="<?=$register['url']?>" class="option-btn"><?=$register['text']?></a>
+                </div>
+
+            <?php } ?>
         </div>
     </div>
 </header>

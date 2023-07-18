@@ -1,8 +1,7 @@
 {
   "heroData": {
     "intro": "N'ayez aucune inquiétude, nous sommes à vos côtés",
-    "titre": "Propulsez votre bien-être avec une viande exceptionnelle",
-    "description": "Nous mettons à votre disposition des viandes de porc, de lapin et autres, toutes issues de l'élevage et de l'alimentation locale à Kinshasa",
+    "titre": "Manger bio et local c’est se protéger contre plusieurs maladies",
     "action": {
       "lien": "shop.php",
       "text": "Commandez Ici"
@@ -80,6 +79,6 @@
     "left-txt": "restant(s)",
     "finished-txt": "rupture de stock",
     "add-to-cart": "Ajouter au panier",
-    "add-to-waitlist": "Soyez Notifié"
+    "add-to-waitlist": "être Notifié"
   }
 }

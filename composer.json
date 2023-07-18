@@ -1,12 +1,14 @@
 {
   "autoload": {
     "psr-4": {
-      "Handlers\\": "./app/src/Handlers"
+      "Handlers\\": "./app/src/Handlers",
+      "Models\\": "./app/src/Models"
     }
   },
   "require": {
     "monolog/monolog": "^3.4",
     "ext-json": "*",
-    "phpmailer/phpmailer": "^6.8"
+    "phpmailer/phpmailer": "^6.8",
+    "ext-pdo": "*"
   }
 }

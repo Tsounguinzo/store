@@ -1,6 +1,10 @@
 <?php
+require_once '../../../vendor/autoload.php';
 
-@include 'config.php';
+use Models\Message;
+
+require_once '../../../config/config.php';
+require_once '../../../scripts/populate_php_file.php';
 
 session_start();
 
@@ -8,34 +12,14 @@ if(isset($_SESSION['user_id'])){
     $user_id = $_SESSION['user_id'];
 }
 
-if(isset($_POST['send'])){
-
+if( $_SERVER['REQUEST_METHOD'] == 'POST'){
     if(!isset($user_id)){
         header('location:login.php');
     }
 
-   $name = $_POST['name'];
-   $name = htmlspecialchars($name);
-   $email = $_POST['email'];
-   $email = htmlspecialchars($email);
-   $number = $_POST['number'];
-   $number = htmlspecialchars($number);
-   $msg = $_POST['msg'];
-   $msg = htmlspecialchars($msg);
+    $comment = new Message($conn);
 
-   $select_message = $conn->prepare("SELECT * FROM `message` WHERE name = ? AND email = ? AND number = ? AND message = ?");
-   $select_message->execute([$name, $email, $number, $msg]);
-
-   if($select_message->rowCount() > 0){
-      $message[] = 'already sent message!';
-   }else{
-
-      $insert_message = $conn->prepare("INSERT INTO `message`(user_id, name, email, number, message) VALUES(?,?,?,?,?)");
-      $insert_message->execute([$user_id, $name, $email, $number, $msg]);
-
-      $message[] = 'sent message successfully!';
-
-   }
+    $message = $comment->sendMessage();
 
 }
 
@@ -58,30 +42,23 @@ if(isset($_POST['send'])){
 </head>
 <body>
    
-<?php include 'header.php'; ?>
+<?php require_once 'header.php'; ?>
 
 <section class="contact">
 
-   <h1 class="title">get in touch</h1>
+   <h1 class="title">ENTRER EN CONTACT</h1>
 
    <form action="" method="POST">
-      <input type="text" name="name" class="box" required placeholder="enter your name">
-      <input type="email" name="email" class="box" required placeholder="enter your email">
-      <input type="number" name="number" min="0" class="box" required placeholder="enter your number">
-      <textarea name="msg" class="box" required placeholder="enter your message" cols="30" rows="10"></textarea>
-      <input type="submit" value="send message" class="btn" name="send">
+      <input type="text" name="name" class="box" required placeholder="nom">
+      <input type="email" name="email" class="box" required placeholder="email">
+      <input type="number" name="number" min="0" class="box" required placeholder="numéro de téléphone">
+      <textarea name="msg" class="box" required placeholder="entrer le message" cols="30" rows="10"></textarea>
+      <input type="submit" value="envoyer" class="btn" name="send">
    </form>
 
 </section>
 
-
-
-
-
-
-
-
-<?php include 'footer.php'; ?>
+<?php require_once 'footer.php'; ?>
 
 <script src="js/script.js"></script>
 
